@@ -54,8 +54,10 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 		Temperature:      chatReq.Temperature,
 		TopP:             chatReq.TopP,
 	}
-	parts := []genai.Part{}
-	for _, r := range chatReq.Messages {
+
+	chat := model.StartChat()
+	var lastPart genai.Part
+	for i, r := range chatReq.Messages {
 		if r.Role == "system" {
 			model.SystemInstruction = &genai.Content{
 				Role:  r.Role,
@@ -63,16 +65,25 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 			}
 			continue
 		}
-		// TODO: parts don't support role for model.GenerateContent
-		parts = append(parts, genai.Text(r.Content))
+		if i == len(chatReq.Messages)-1 { // the last message
+			// TODO(jbd): This hack strips away the role of the last message.
+			// But Gemini API Go SDK doesn't give flexibility to call SendMessage
+			// with a list of contents.
+			lastPart = genai.Text(r.Content)
+			break
+		}
+		chat.History = append(chat.History, &genai.Content{
+			Role:  r.Role,
+			Parts: []genai.Part{genai.Text(r.Content)},
+		})
 	}
 
 	if chatReq.Stream {
-		streamingChatCompletionsHandler(w, r, chatReq.Model, model, parts)
+		streamingChatCompletionsHandler(w, r, chatReq.Model, chat, lastPart)
 		return
 	}
 
-	geminiResp, err := model.GenerateContent(r.Context(), parts...)
+	geminiResp, err := chat.SendMessage(r.Context(), lastPart)
 	if err != nil {
 		internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to generate content: %v", err)
 		return

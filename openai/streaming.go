@@ -23,8 +23,8 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-func streamingChatCompletionsHandler(w http.ResponseWriter, r *http.Request, model string, genModel *genai.GenerativeModel, parts []genai.Part) {
-	iter := genModel.GenerateContentStream(r.Context(), parts...)
+func streamingChatCompletionsHandler(w http.ResponseWriter, r *http.Request, model string, chat *genai.ChatSession, lastPart genai.Part) {
+	iter := chat.SendMessageStream(r.Context(), lastPart)
 
 	encoder := json.NewEncoder(w)
 	for {
