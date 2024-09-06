@@ -16,7 +16,7 @@ package openai
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"reflect"
@@ -32,7 +32,7 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 		internal.ErrorHandler(w, r, http.StatusMethodNotAllowed, "method not allowed")
 		return
 	}
-	body, err := ioutil.ReadAll(r.Body)
+	body, err := io.ReadAll(r.Body)
 	if err != nil {
 		internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to read request body: %v", err)
 		return
