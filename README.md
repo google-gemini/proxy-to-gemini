@@ -2,19 +2,7 @@
 
 [![Go](https://github.com/google-gemini/proxy-to-gemini/actions/workflows/go.yml/badge.svg)](https://github.com/google-gemini/proxy-to-gemini/actions/workflows/go.yml)
 
-A simple proxy server to access Gemini models by using other well-known API
-
-<!-- TOC -->
-
-- [proxy-to-gemini](#proxy-to-gemini)
-    - [Installation](#installation)
-    - [Usage with OpenAI API](#usage-with-openai-api)
-        - [Known OpenAI Limitations](#known-openai-limitations)
-    - [Usage with Ollama API](#usage-with-ollama-api)
-        - [Known Ollama Limitations](#known-ollama-limitations)
-    - [Notes](#notes)
-
-<!-- /TOC -->
+A simple proxy server to access Gemini models by using other well-known APIs like OpenAI and Ollama.
 
 ## Installation
 
