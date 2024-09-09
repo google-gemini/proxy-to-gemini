@@ -6,8 +6,8 @@ A simple proxy server to access Gemini models by using other well-known APIs lik
 
 ## Installation
 
-``` sh
-$ go install github.com/google-gemini/proxy-to-gemini/cmd/proxy-to-gemini@latest
+```sh
+$ docker pull googlegemini/proxy-to-gemini
 ```
 
 Obtain a Gemini API key from the [AI Studio](https://ai.google.dev/aistudio).
@@ -22,7 +22,10 @@ $ export GEMINI_API_KEY=<insert key>
 Run the binary:
 
 ```sh
-$ proxy-to-gemini -protocol=openai
+$ docker run \
+  -p 5555:5555 \
+  -e GEMINI_API_KEY=$GEMINI_API_KEY \
+  googlegemini/proxy-to-gemini
 2024/07/20 19:35:21 Starting server on :5555
 ```
 
@@ -115,7 +118,10 @@ $ curl http://127.0.0.1:5555/v1/embeddings \
 ## Usage with Ollama API
 
 ``` sh
-$ proxy-to-gemini -protocol=ollama
+$ docker run \
+  -p 5555:5555 \
+  -e GEMINI_API_KEY=$GEMINI_API_KEY \
+  googlegemini/proxy-to-gemini -protocol=ollama
 2024/07/20 19:35:21 Starting server on :5555
 ```
 Once server starts, you can access Gemini models through the proxy server
