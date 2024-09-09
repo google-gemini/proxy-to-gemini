@@ -22,10 +22,7 @@ $ export GEMINI_API_KEY=<insert key>
 Run the binary:
 
 ```sh
-$ docker run \
-  -p 5555:5555 \
-  -e GEMINI_API_KEY=$GEMINI_API_KEY \
-  googlegemini/proxy-to-gemini
+$ docker run -p 5555:5555 -e GEMINI_API_KEY=$GEMINI_API_KEY googlegemini/proxy-to-gemini
 2024/07/20 19:35:21 Starting server on :5555
 ```
 
