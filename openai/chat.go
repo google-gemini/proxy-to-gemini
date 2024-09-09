@@ -55,9 +55,10 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 		TopP:             chatReq.TopP,
 	}
 
-	tools := createTools(chatReq)
+	toolConfig, tools := createTools(chatReq)
 	if len(tools) > 0 {
 		model.Tools = tools
+		model.ToolConfig = toolConfig
 	}
 
 	chat := model.StartChat()
@@ -101,9 +102,12 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 	}
 }
 
-func createTools(chatReq ChatCompletionRequest) []*genai.Tool {
+func createTools(chatReq ChatCompletionRequest) (*genai.ToolConfig, []*genai.Tool) {
+	config := &genai.ToolConfig{
+		FunctionCallingConfig: &genai.FunctionCallingConfig{},
+	}
 	if len(chatReq.Tools) == 0 {
-		return []*genai.Tool{}
+		return config, []*genai.Tool{}
 	}
 	tools := make([]*genai.Tool, 0, len(chatReq.Tools))
 	for _, t := range chatReq.Tools {
@@ -125,7 +129,11 @@ func createTools(chatReq ChatCompletionRequest) []*genai.Tool {
 			FunctionDeclarations: []*genai.FunctionDeclaration{fn},
 		})
 	}
-	return tools
+	if chatReq.ToolChoice == "auto" {
+		config.FunctionCallingConfig.Mode = genai.FunctionCallingAuto
+	}
+	// TODO: Handle any case with the provided function name.
+	return config, tools
 }
 
 func toType(t string) genai.Type {
