@@ -32,14 +32,14 @@ import (
 var (
 	apikey   string
 	hostport string
-	protocol string
+	api      string
 )
 
 func main() {
 	ctx := context.Background()
 
 	flag.StringVar(&hostport, "listen", ":5555", "host and port to listen on")
-	flag.StringVar(&protocol, "protocol", "openai", "API proxocol; openai or ollama")
+	flag.StringVar(&api, "api", "openai", "API proxocol; openai or ollama")
 	flag.Parse()
 
 	apikey = os.Getenv("GEMINI_API_KEY")
@@ -54,7 +54,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", indexHandler)
-	switch protocol {
+	switch api {
 	case "openai":
 		openai.RegisterHandlers(r, client)
 	case "ollama":
@@ -68,5 +68,5 @@ func main() {
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "You are running proxy-to-gemini at %q; protocol = %q", hostport, protocol)
+	fmt.Fprintf(w, "You are running proxy-to-gemini at %q; api = %q", hostport, api)
 }
