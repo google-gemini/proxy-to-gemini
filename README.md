@@ -10,7 +10,7 @@ A simple proxy server to access Gemini models by using other well-known APIs lik
 $ docker pull googlegemini/proxy-to-gemini
 ```
 
-Obtain a Gemini API key from the [AI Studio](https://ai.google.dev/aistudio).
+Obtain a Gemini API key from the [AI Studio](https://aistudio.google.com/).
 Then set the following environmental variable to the key.
 
 ```sh
