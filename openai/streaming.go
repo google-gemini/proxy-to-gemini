@@ -41,7 +41,7 @@ func streamingChatCompletionsHandler(w http.ResponseWriter, r *http.Request, mod
 			internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to marshal chunk: %v", err)
 			return
 		}
-		fmt.Fprintf(w, "data: %s\n\n", chunk)
+		fmt.Fprintf(w, "data: %s\n", chunk)
 	}
 	fmt.Fprint(w, "data: [DONE]\n")
 }

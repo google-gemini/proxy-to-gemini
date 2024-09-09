@@ -69,11 +69,8 @@ $ curl http://127.0.0.1:5555/v1/chat/completions \
     "stream": true
   }'
 data: {"object":"chat.completion.chunk","created":1725852986,"model":"gemini-1.5-pro","choices":[{"index":0,"message":{"role":"model","content":"Hello"},"finish_reason":"stop"}],"usage":{"prompt_tokens":5,"total_tokens":6,"completion_tokens":1}}
-
 data: {"object":"chat.completion.chunk","created":1725852986,"model":"gemini-1.5-pro","choices":[{"index":0,"message":{"role":"model","content":" back! \n\nIt's nice to be greeted by the classic \""},"finish_reason":"stop"}],"usage":{"prompt_tokens":5,"total_tokens":21,"completion_tokens":16}}
-
 data: {"object":"chat.completion.chunk","created":1725852987,"model":"gemini-1.5-pro","choices":[{"index":0,"message":{"role":"model","content":"Hello, world!\"  What can I help you with today? \n"},"finish_reason":"stop"}],"usage":{"prompt_tokens":5,"total_tokens":35,"completion_tokens":30}}
-
 data: [DONE]
 ```
 
