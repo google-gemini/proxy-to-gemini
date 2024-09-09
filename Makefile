@@ -7,4 +7,4 @@ publish: build
 	docker push $(DOCKER_IMAGE)
 
 run: build
-	docker run -p 5555:5555 -e GEMINI_API_KEY=$GEMINI_API_KEY $(DOCKER_IMAGE)
+	docker run -p 5555:5555 -e GEMINI_API_KEY=${GEMINI_API_KEY} $(DOCKER_IMAGE)
