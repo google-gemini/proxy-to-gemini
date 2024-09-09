@@ -16,6 +16,7 @@ package openai
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/google-gemini/proxy-to-gemini/internal"
@@ -26,9 +27,8 @@ import (
 func streamingChatCompletionsHandler(w http.ResponseWriter, r *http.Request, model string, chat *genai.ChatSession, lastPart genai.Part) {
 	iter := chat.SendMessageStream(r.Context(), lastPart)
 
-	encoder := json.NewEncoder(w)
 	for {
-		geminiResp, err := iter.Next()
+		gresp, err := iter.Next()
 		if err == iterator.Done {
 			break
 		}
@@ -36,10 +36,12 @@ func streamingChatCompletionsHandler(w http.ResponseWriter, r *http.Request, mod
 			internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to stream response: %v", err)
 			return
 		}
-		resp := toOpenAIResponse(geminiResp, "chat.completion.chunk", model)
-		if err := encoder.Encode(resp); err != nil {
-			internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to encode gemini response: %v", err)
+		chunk, err := json.Marshal(toOpenAIResponse(gresp, "chat.completion.chunk", model))
+		if err != nil {
+			internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to marshal chunk: %v", err)
 			return
 		}
+		fmt.Fprintf(w, "data: %s\n\n", chunk)
 	}
+	fmt.Fprint(w, "data: [DONE]\n")
 }
