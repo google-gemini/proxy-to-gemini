@@ -32,11 +32,12 @@ chat_completion = client.chat.completions.create(
         }
     ],
 )
-print(chat_completion)
+print(chat_completion.chat_completion.choices)
 ```
 
 Run the Python file:
 
 ```sh
-$ python3 test.py
+$ python test.py
+[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='This is a test. \n', refusal=None, role='model', function_call=None, tool_calls=None))]
 ```
