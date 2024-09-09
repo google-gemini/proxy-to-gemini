@@ -105,10 +105,11 @@ $ curl http://127.0.0.1:5555/v1/embeddings \
 OpenAI client library could be configured to use the proxy:
 
 ```python
+from openai import OpenAI
+
 client = OpenAI(
     base_url="http://127.0.0.1:5555/v1", # or set OPENAI_BASE_URL environmental variable
 )
-
 chat_completion = client.chat.completions.create(
     model = "gemini-1.5-pro",
     messages=[
