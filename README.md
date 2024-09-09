@@ -102,6 +102,24 @@ $ curl http://127.0.0.1:5555/v1/embeddings \
 }
 ```
 
+OpenAI client library could be configured to use the proxy:
+
+```python
+client = OpenAI(
+    base_url="http://127.0.0.1:5555/v1", # or set OPENAI_BASE_URL environmental variable
+)
+
+chat_completion = client.chat.completions.create(
+    model = "gemini-1.5-pro",
+    messages=[
+        {
+            "role": "user",
+            "content": "Say this is a test",
+        }
+    ],
+)
+```
+
 ### Known OpenAI Limitations
 
 * Only [chat completions](https://platform.openai.com/docs/api-reference/chat) and [embeddings](https://platform.openai.com/docs/api-reference/embeddings/create) are planned to be supported.
