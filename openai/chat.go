@@ -55,6 +55,11 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 		TopP:             chatReq.TopP,
 	}
 
+	tools := createTools(chatReq)
+	if len(tools) > 0 {
+		model.Tools = tools
+	}
+
 	chat := model.StartChat()
 	var lastPart genai.Part
 	for i, r := range chatReq.Messages {
@@ -93,6 +98,52 @@ func (h *handlers) ChatCompletionsHandler(w http.ResponseWriter, r *http.Request
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		internal.ErrorHandler(w, r, http.StatusInternalServerError, "failed to encode chat completions response: %v", err)
 		return
+	}
+}
+
+func createTools(chatReq ChatCompletionRequest) []*genai.Tool {
+	if len(chatReq.Tools) == 0 {
+		return []*genai.Tool{}
+	}
+	tools := make([]*genai.Tool, 0, len(chatReq.Tools))
+	for _, t := range chatReq.Tools {
+		params := &genai.Schema{
+			Required: t.Function.Parameters.Required,
+		}
+		for name, prop := range t.Function.Parameters.Properties {
+			params.Properties[name] = &genai.Schema{
+				Type:        toType(prop.Type),
+				Description: prop.Description,
+			}
+		}
+		fn := &genai.FunctionDeclaration{
+			Name:        t.Function.Name,
+			Description: t.Function.Description,
+			Parameters:  params,
+		}
+		tools = append(tools, &genai.Tool{
+			FunctionDeclarations: []*genai.FunctionDeclaration{fn},
+		})
+	}
+	return tools
+}
+
+func toType(t string) genai.Type {
+	switch t {
+	case "string":
+		return genai.TypeString
+	case "object":
+		return genai.TypeObject
+	case "array":
+		return genai.TypeArray
+	case "boolean":
+		return genai.TypeBoolean
+	case "integer":
+		return genai.TypeInteger
+	case "number":
+		return genai.TypeNumber
+	default:
+		return genai.TypeString
 	}
 }
 

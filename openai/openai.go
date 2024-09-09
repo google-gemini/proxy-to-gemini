@@ -60,11 +60,23 @@ type Usage struct {
 	CompletionTokens int32 `json:"completion_tokens,omitempty"`
 }
 
-type ToolFunction struct {
-	Name        string `json:"name,omitempty"`
+type ToolFunctionParamsProperties map[string]struct {
+	Type        string `json:"type,omitempty"`
 	Description string `json:"description,omitempty"`
-	Parameters  any    `json:"parameters,omitempty"`
-	Strict      bool   `json:"strict,omitempty"`
+}
+
+type ToolFunctionParams struct {
+	Type                 string                       `json:"type,omitempty"`
+	Properties           ToolFunctionParamsProperties `json:"properties,omitempty"`
+	Required             []string                     `json:"required,omitempty"`
+	AdditionalParameters bool                         `json:"additional_parameters,omitempty"`
+}
+
+type ToolFunction struct {
+	Name        string             `json:"name,omitempty"`
+	Description string             `json:"description,omitempty"`
+	Parameters  ToolFunctionParams `json:"parameters,omitempty"`
+	Strict      bool               `json:"strict,omitempty"`
 }
 
 type Tool struct {
