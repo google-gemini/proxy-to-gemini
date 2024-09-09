@@ -14,7 +14,7 @@ Obtain a Gemini API key from the [AI Studio](https://aistudio.google.com/).
 Then set the following environmental variable to the key.
 
 ```sh
-$ export GEMINI_API_KEY=<insert key>
+$ export GEMINI_API_KEY=<YOUR_API_KEY>
 ```
 
 ## Usage with OpenAI API
