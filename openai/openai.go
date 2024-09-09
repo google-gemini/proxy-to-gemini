@@ -60,6 +60,18 @@ type Usage struct {
 	CompletionTokens int32 `json:"completion_tokens,omitempty"`
 }
 
+type ToolFunction struct {
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
+	Parameters  any    `json:"parameters,omitempty"`
+	Strict      bool   `json:"strict,omitempty"`
+}
+
+type Tool struct {
+	Type     string       `json:"type,omitempty"`
+	Function ToolFunction `json:"function,omitempty"`
+}
+
 type ChatCompletionRequest struct {
 	// TODO: Support response_format
 	// TODO: Add logit bias and logprobs/top_logprobs
@@ -78,6 +90,10 @@ type ChatCompletionRequest struct {
 	PresencePenalty  *float32 `json:"presence_penalty,omitempty"`
 	Temperature      *float32 `json:"temperature,omitempty"`
 	TopP             *float32 `json:"top_p,omitempty"`
+
+	Tools             []Tool `json:"tools,omitempty"`
+	ToolChoice        string `json:"tool_choice,omitempty"`
+	ParallelToolCalls bool   `json:"parallel_tool_calls,omitempty"`
 
 	User string `json:"user,omitempty"`
 }
