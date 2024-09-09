@@ -114,6 +114,7 @@ func createTools(chatReq ChatCompletionRequest) (*genai.ToolConfig, []*genai.Too
 		params := &genai.Schema{
 			Required: t.Function.Parameters.Required,
 		}
+		params.Properties = make(map[string]*genai.Schema)
 		for name, prop := range t.Function.Parameters.Properties {
 			params.Properties[name] = &genai.Schema{
 				Type:        toType(prop.Type),
@@ -151,7 +152,7 @@ func toType(t string) genai.Type {
 	case "number":
 		return genai.TypeNumber
 	default:
-		return genai.TypeString
+		return genai.TypeObject
 	}
 }
 

@@ -129,3 +129,73 @@ func Test_geminiToOpenAIResponse(t *testing.T) {
 		})
 	}
 }
+
+func Test_createTools(t *testing.T) {
+	tests := []struct {
+		name       string
+		chatReq    ChatCompletionRequest
+		wantConfig *genai.ToolConfig
+		wantTools  []*genai.Tool
+	}{
+		{
+			name: "basic",
+			chatReq: ChatCompletionRequest{
+				ToolChoice: "auto",
+				Tools: []Tool{
+					{
+						Type: "object",
+						Function: ToolFunction{
+							Name:        "test",
+							Description: "test function",
+							Parameters: ToolFunctionParams{
+								Required: []string{"query"},
+								Properties: map[string]ToolFunctionProperty{
+									"query": {
+										Type:        "string",
+										Description: "a query for searching",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			wantConfig: &genai.ToolConfig{
+				FunctionCallingConfig: &genai.FunctionCallingConfig{
+					Mode: genai.FunctionCallingAuto,
+				},
+			},
+			wantTools: []*genai.Tool{
+				{
+					FunctionDeclarations: []*genai.FunctionDeclaration{
+						{
+							Name:        "test",
+							Description: "test function",
+							Parameters: &genai.Schema{
+								Required: []string{"query"},
+								Properties: map[string]*genai.Schema{
+									"query": {
+										Type:        genai.TypeString,
+										Description: "a query for searching",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotConfig, gotTools := createTools(tt.chatReq)
+			if !reflect.DeepEqual(gotConfig, tt.wantConfig) {
+				t.Errorf("createTools() gotConfig = %v, wantConfig %v", gotConfig, tt.wantConfig)
+			}
+			if !reflect.DeepEqual(gotTools, tt.wantTools) {
+				t.Errorf("createTools() gotTools = %v, wantTools %v", gotTools, tt.wantTools)
+			}
+		})
+	}
+}
