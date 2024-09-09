@@ -53,13 +53,16 @@ func main() {
 	defer client.Close()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", indexHandler)
+	r.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprint(w, "ok")
+	})
 	switch api {
 	case "openai":
 		openai.RegisterHandlers(r, client)
 	case "ollama":
 		ollama.RegisterHandlers(r, client)
 	}
+	r.HandleFunc("/", indexHandler)
 
 	log.Printf("Starting server on %v", hostport)
 	if err := http.ListenAndServe(hostport, r); err != nil {
