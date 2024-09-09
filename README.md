@@ -112,10 +112,7 @@ $ curl http://127.0.0.1:5555/v1/embeddings \
 ## Usage with Ollama API
 
 ``` sh
-$ docker run \
-  -p 5555:5555 \
-  -e GEMINI_API_KEY=$GEMINI_API_KEY \
-  googlegemini/proxy-to-gemini -api=ollama
+$ docker run -p 5555:5555 -e GEMINI_API_KEY=$GEMINI_API_KEY googlegemini/proxy-to-gemini -api=ollama
 2024/07/20 19:35:21 Starting server on :5555
 ```
 Once server starts, you can access Gemini models through the proxy server
