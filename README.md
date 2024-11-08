@@ -2,6 +2,11 @@
 
 [![Go](https://github.com/google-gemini/proxy-to-gemini/actions/workflows/go.yml/badge.svg)](https://github.com/google-gemini/proxy-to-gemini/actions/workflows/go.yml)
 
+> [!IMPORTANT]  
+> Gemini API officially supports OpenAI API compatibility and this sidecar is no longer needed.
+> See the [blog post](https://developers.googleblog.com/en/gemini-is-now-accessible-from-the-openai-library/) for more details!
+
+
 A simple proxy server to access Gemini models by using other well-known APIs like OpenAI and Ollama.
 
 ## Setup
