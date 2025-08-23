@@ -145,10 +145,54 @@ $ curl http://127.0.0.1:5555/api/embed \
 {"model":"text-embedding-004","embeddings":[[0.04824496,0.0117766075,-0.011552069,-0.018164534,-0.0026110192,0.05092675,0.08172899,0.007869772,0.054475933,0.026131334,-0.06593486,-0.002256868,0.038781915,...]]}
 ```
 
+Create chat completions:
+
+```sh
+$ curl http://127.0.0.1:5555/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-1.5-pro",
+    "messages": [
+      { "role": "user", "content": "Hello, world!" }
+    ]
+  }'
+```
+
+Chat response example:
+
+```json
+{
+  "model": "gemini-1.5-pro",
+  "created_at": "2024-07-28T15:00:00Z",
+  "message": { "role": "assistant", "content": "Hello back to you!" },
+  "done": true,
+  "total_duration": 123456789,
+  "prompt_eval_count": 5,
+  "eval_count": 10
+}
+```
+
+Advanced usage:
+
+- Use the `format` parameter to request JSON or enforce a JSON schema.
+- Use the `options` parameter to set model generation parameters: `temperature`, `num_predict`, `top_k`, and `top_p`.
+
+```sh
+$ curl http://127.0.0.1:5555/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-1.5-pro",
+    "messages": [...],
+    "format": "json",
+    "options": { "temperature": 0.5, "num_predict": 100 }
+  }'
+```
+
 ### Known Ollama Limitations
 * Streaming is not yet supported.
 * Images are not supported.
-* Response format is not supported.
+* Response format is supported only for chat API.
+* Tools are not supported for chat API.
 * Model parameters not supported by Gemini are ignored.
 
 ## Notes
